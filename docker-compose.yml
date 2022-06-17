@@ -1,0 +1,35 @@
+version: "3.7"
+services:
+  apache:
+    image: php:8.1.1-apache
+    volumes:
+      - ./php:/var/www/html
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - lamp_net
+  mysql:
+    container_name: MySQL
+    restart: always
+    image: mysql:latest
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - lamp_net
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+    ports:
+      - 8001:80
+    networks:
+      - lamp_net
+networks:
+  lamp_net:
+    driver: bridge
+volumes:
+  db-data:
